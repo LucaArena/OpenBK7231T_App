@@ -291,13 +291,16 @@ int UART_InitUART(int baud, int parity) {
     config.flags = 0;
 
 
-    // BK_UART_1 is defined to 0
-    if (CFG_HasFlag(OBK_FLAG_USE_SECONDARY_UART)) {
-        g_chosenUART = BK_UART_2;
-	}
-	else {
-        g_chosenUART = BK_UART_1;
-    }
+ //    BK_UART_1 is defined to 0
+ //    if (CFG_HasFlag(OBK_FLAG_USE_SECONDARY_UART)) {
+ //        g_chosenUART = BK_UART_2;
+	// }
+	// else {
+ //        g_chosenUART = BK_UART_1;
+ //    }
+
+	g_chosenUART = BK_UART_1;
+	
     bk_uart_initialize(g_chosenUART, &config, NULL);
 	bk_uart_set_rx_callback(g_chosenUART, test_ty_read_uart_data_to_buffer, NULL);
 #elif PLATFORM_BL602

@@ -520,7 +520,7 @@ void uart1_isr(void)
     status = intr_status & intr_en;
     
     
-    ADDLOG_WARN(LOG_FEATURE_ENERGYMETER,"UART_ISR1\n");
+    //ADDLOG_WARN(LOG_FEATURE_ENERGYMETER,"UART_ISR1\n");
 
 
     if(status & (RX_FIFO_NEED_READ_STA | UART_RX_STOP_END_STA))
@@ -762,7 +762,7 @@ void uart2_isr(void)
     REG_WRITE(REG_UART2_INTR_STATUS, intr_status);
     status = intr_status & intr_en;
 
-	ADDLOG_WARN(LOG_FEATURE_ENERGYMETER,"UART_ISR2\n");
+    //ADDLOG_WARN(LOG_FEATURE_ENERGYMETER,"UART_ISR2\n");
 
     if(status & (RX_FIFO_NEED_READ_STA | UART_RX_STOP_END_STA))
     {

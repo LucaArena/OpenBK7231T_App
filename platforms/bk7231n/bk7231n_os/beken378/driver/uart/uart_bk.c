@@ -1,3 +1,6 @@
+
+#include "../../../apps/OpenBK7231N_App/src/logging/logging.h"
+
 #include "include.h"
 #include "arm_arch.h"
 
@@ -515,6 +518,10 @@ void uart1_isr(void)
     intr_status = REG_READ(REG_UART1_INTR_STATUS);
     REG_WRITE(REG_UART1_INTR_STATUS, intr_status);
     status = intr_status & intr_en;
+    
+    
+    ADDLOG_WARN(LOG_FEATURE_ENERGYMETER,"UART_ISR1\n");
+
 
     if(status & (RX_FIFO_NEED_READ_STA | UART_RX_STOP_END_STA))
     {
@@ -755,6 +762,8 @@ void uart2_isr(void)
     REG_WRITE(REG_UART2_INTR_STATUS, intr_status);
     status = intr_status & intr_en;
 
+	ADDLOG_WARN(LOG_FEATURE_ENERGYMETER,"UART_ISR2\n");
+
     if(status & (RX_FIFO_NEED_READ_STA | UART_RX_STOP_END_STA))
     {
 	#if (!CFG_SUPPORT_RTT)
@@ -764,7 +773,6 @@ void uart2_isr(void)
 		if (uart_receive_callback[1].callback != 0)
 		{
 			void *param = uart_receive_callback[1].param;
-
 			uart_receive_callback[1].callback(UART2_PORT, param);
 		}
 		else
@@ -1015,15 +1023,20 @@ INT32 os_null_printf(const char *fmt, ...)
 int uart_read_byte(int uport)
 {
     int val = -1;
-    UINT32 fifo_status_reg;
+    UINT32 fifo_status_reg, u32Cmd;
 
     if (UART1_PORT == uport)
         fifo_status_reg = REG_UART1_FIFO_STATUS;
     else
         fifo_status_reg = REG_UART2_FIFO_STATUS;
 
-    if (REG_READ(fifo_status_reg) & FIFO_RD_READY)
+    u32Cmd = REG_READ(fifo_status_reg);
+    if (u32Cmd & FIFO_RD_READY)
+    {
         UART_READ_BYTE(uport, val);
+        //ADDLOG_WARN(LOG_FEATURE_ENERGYMETER,"06 UART_READ_BYTE: Time: %i, fifo: %08X, val: %i \n", rtos_get_time(), u32Cmd, val);
+    }
+    
 
     return val;
 }
